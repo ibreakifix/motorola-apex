@@ -1,0 +1,7 @@
+from kernel. There is a user "apexdbg" that has a hashed password of "bSedQcyee". This collides with "mixD|jQN", assuming this is using the old vxWorks hashing func... not tested.
+
+
+Attempt 1 - FTP brute force. Not feasible since only 4 concurrent connections can be opened. Try to create FTPD tasks to allow us to brute force the "apexdbg" user pw... Doesn't work, connection limit is fixed at 4 at kernel compile time.
+ftpd6Init(0,loginUserVerify, 0)
+
+Attempt 2 - Telnet... not really feasible, only 3 connections can be opened and auth result is delayed.

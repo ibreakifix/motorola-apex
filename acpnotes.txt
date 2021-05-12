@@ -1,0 +1,69 @@
+GI/Motorola ACP (MediaCipher 2.1) Personalization
+
+Notes on burning seeds from VXworks kernel
+
+1. New ACPs are installed in xyz platform. In this case APEX1000 or 1500 but can be DSR/SEM/NE/CPE/etc...
+2. The system will detect UAs of 0x000000000, health 0x0f, indicating the ASICs are running in personalization mode.
+-> print_acp_errors
+MC2.1 reg write err count = 0
+MC2.1 reg read err count = 0
+MC2.1 triton send err count = 0
+MC2.1 triton recv err count = 0
+value = 3187020 = 0x30a14c
+-> print_acp_log
+ACP LOG
+-------
+INDEX HEALTH UNIT ADDRESS
+----- ------ ------------
+  0     0f    0000000000
+
+  1     0f    0000000000
+
+  2     0f    0000000000
+
+  3     0f    0000000000
+
+  4     0f    0000000000
+
+  5     0f    0000000000
+
+value = 26 = 0x1a
+-> 
+
+3. The system initiates a seedload task. If /config1 is not valid (reset), the seedload needs to be launched manually.
+seedload(bool) 
+4. Data is transferred via a socket on port 3000 -> inetstatShow
+Active Internet connections (including servers)
+PCB      Proto Recv-Q Send-Q  Local Address         Foreign Address       (state)
+-------- ----- ------ ------  --------------------- --------------------- -------
+481cf00  TCP        0      0  0.0.0.0.80            0.0.0.0.0             LISTEN
+481c480  TCP        0      0  0.0.0.0.21            0.0.0.0.0             LISTEN
+481bf40  TCP        0      0  0.0.0.0.111           0.0.0.0.0             LISTEN
+481b760  TCP        0      0  0.0.0.0.23            0.0.0.0.0             LISTEN
+45aa6e0  UDP        0      0  0.0.0.0.7             0.0.0.0.0            
+45aa5a0  UDP        0      0  0.0.0.0.161           0.0.0.0.0            
+45a9f60  UDP        0      0  0.0.0.0.111           0.0.0.0.0            
+value = 1 = 0x1
+
+5. This socket communicates with a "seedload station" (SLS) in the factory.
+5a. The seedload process accepts 4(or more?) byte commands from the SLS.
+5b. (per Arris patent) The pre-seed key is sent via SLS to the target device. The target computes seed keys from the pre-seed key
+5c. The unit address is programmed to the ACPs
+5d. A second seedload task is launched, seedload_phase4(SLSmsg *), which will then blow an eFuse on the ACP (checked via FUSEBLOW_COMPLETE_STATUS_REQUEST).
+6. The ACPs are reset and they enter normal application mode.
+7. The host device runs a validation task, "AcpInterface::do_post_seedload_validation". This validation happens on each boot to ensure the keys were not corrupted due to power loss (dead battery, chip removal, etc...). 
+7a. If the system detects corrupt keys, initialization stops.(QRMs are not loaded, unit can return to broadcasting clear-QAM only once the ACP board is removed).
+
+
+---- Personalizing Devices
+1. launch seedload() from internal UART connection. The external serial ports are disabled if seedload is required.
+-> seedload
+0x99320e0 (tShell0): Seedload Task Running
+0x99320e0 (tShell0): Insertion Pass-Thru Test Success!
+0x99320e0 (tShell0): Secure EEPROM Write Test Success!
+#Socket is opened on port 3000
+0xc8690a0 (tSeed): Waiting for connection from SLS. #Netcat is opened on host computer
+Failure reading SLSmsg. #Bad command sent (random data in this case)
+0xc8690a0 (tSeed): Error receiving message from SLS. #Seedload task hangs after this
+2. Commands are hex and sent to socket 3000. The system must detect a socket, we can not do "echo > nc 10.1.1.1 3000"
+

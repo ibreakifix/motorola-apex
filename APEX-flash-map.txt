@@ -1,0 +1,55 @@
+FS 0: 
+Block Size: 131072, Block Count: 512, BufferBytes= 64, BufsPerBlock: 2048, 10msBufs: 68
+Flash FS /config1, RAM Disk Pointer = 0x99815c0, FlashAddr = FF480000
+  Start Blk = 420, #Blks = 2, Max Len = 261632, Bytes Used = 0
+
+FS 1: Flash FS /config2, RAM Disk Pointer = 0x99df010, FlashAddr = FF440000
+  Start Blk = 418, #Blks = 2, Max Len = 261632, Bytes Used = 0
+
+FS 2: Flash FS /config3, RAM Disk Pointer = 0x9a40010, FlashAddr = FF400000
+  Start Blk = 416, #Blks = 1, Max Len = 130560, Bytes Used = 0
+
+FS 3: Flash FS /emgui, RAM Disk Pointer = 0x9a82010, FlashAddr = FEDC0000
+  Start Blk = 366, #Blks = 16, Max Len = 2096640, Bytes Used = 0
+
+FS 4: Flash FS /muxfpga1, RAM Disk Pointer = 0x0, FlashAddr = FE7C0000
+  Start Blk = 318, #Blks = 48, Max Len = 6290944, Bytes Used = 2803024
+
+FS 5: Flash FS /mpc2mux, RAM Disk Pointer = 0x0, FlashAddr = FDAE0000
+  Start Blk = 215, #Blks = 7, Max Len = 916992, Bytes Used = 719915
+
+FS 6: Flash FS /mpc2gx60, RAM Disk Pointer = 0x0, FlashAddr = FD980000
+  Start Blk = 204, #Blks = 11, Max Len = 1441280, Bytes Used = 1011211
+
+FS 7: Flash FS /qrmcal, RAM Disk Pointer = 0x0, FlashAddr = FD7E0000
+  Start Blk = 191, #Blks = 1, Max Len = 130560, Bytes Used = 0
+
+FS 8: Flash FS /qrmfw, RAM Disk Pointer = 0x0, FlashAddr = FD7A0000
+  Start Blk = 189, #Blks = 2, Max Len = 261632, Bytes Used = 0
+
+FS 9: Flash FS /dtifpga, RAM Disk Pointer = 0x0, FlashAddr = FD760000
+  Start Blk = 187, #Blks = 2, Max Len = 261632, Bytes Used = 130952
+
+FS 10: Flash FS /gluefpga, RAM Disk Pointer = 0x0, FlashAddr = FD720000
+  Start Blk = 185, #Blks = 2, Max Len = 261632, Bytes Used = 92906
+
+FS 11: Flash FS /gigeapp, RAM Disk Pointer = 0x0, FlashAddr = FEFC0000
+  Start Blk = 382, #Blks = 32, Max Len = 4193792, Bytes Used = 1621344
+
+FS 12: Flash FS /gigeboot, RAM Disk Pointer = 0x0, FlashAddr = FCC60000
+  Start Blk = 99, #Blks = 5, Max Len = 654848, Bytes Used = 2760
+
+FS 13: Flash FS /qrmfpga, RAM Disk Pointer = 0x0, FlashAddr = FC440000
+  Start Blk = 34, #Blks = 65, Max Len = 8519168, Bytes Used = 0
+
+FS 14 (undocumented) FS /appcode (kernel.img)
+len 90 start blk 422
+
+Spare 1 - len 34 start blk 0
+
+Spare 2 - len 12 start blk 192
+
+Spare 3 - len 96 start blk 222
+
+-----
+/appcode partition is from blocks 104 until 185 per getAppFiles... This is wrong since kernel.img is at end of flash

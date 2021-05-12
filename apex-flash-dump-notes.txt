@@ -1,0 +1,30 @@
+Dumping the flash without desoldering the BGA packages...
+
+An internal serial port is available. The baud is only 9600, so that is too slow. 
+We'll use serial to enable telnet access and memdump the contents to a file on our host pc.
+
+Flash begins @ 0xFC000000 len 4000000
+
+
+---- Access system
+Add a fake account with known pw so we can dump flash over telnet...
+1. Switch to default encrypt: loginEncryptInstall
+2. Add account: loginUserAdd("mot",printf(loginDefaultEncrypt("motorola")));
+----
+---- Dump fs
+~ % nc 192.168.1.106 23 > apexout.txt
+mot <--- user
+motorola <--- pass
+d 0xFC000000,4000000 <--- vx memdump command
+
+Wait until dump ends
+ctrl+c to end process
+
+cut -c14-52 apexout.txt > hexoutapex.txt <!--- cut only the hex values
+
+Resulting hex file is 64MB, which looks correct since our flash is 512Mbit. 
+There is a secondary spansion chip that we need to look at, it might just be for redundancy (act/stby images). 
+Considering our QRM images are blank, it likely is additional storage and not redundancy. We only need the kernel image, which is in the first flash dump, so this isn't going to be explored further for now. 
+-> Presumably, the other flash chip would be at address (0xFC000000 - 4000000) = F8000000?
+
+flash is 2x GL512P11FFI01, sectors are 128Kb ea (vxworks reports 131072)
